@@ -124,4 +124,28 @@ def vendor_account_toggle (server, form):
     except KeyError:
         _send_response (server, FORBIDDEN)
 
+# /vendor/account/credit/add
+def vendor_account_credit_add (server, form):
+    """Handle the /vendor/account/credit/add request from the Android tablet app.
+
+    This request occurs when clicking the credit (+)/(-) buttons for a given
+    account, to add/subtract credit.
+
+    It will POST a single value, vendordevice_id, which corresponds to
+    the tablet device's mac address."""
+
+    try:
+        # this version of the simulator allows all logins and doesn't
+        # keep state, so the device_id value doesn't matter; it simply
+        # needs to be present in the POST request
+        device_id = form.getvalue("vendordevice_id")
+
+        # the actual server will update a database with the additional amount
+        # but since the simulator currently just sets this randomly
+        # (see vendor_accounts_list, above) we'll just respond ok for now
+        _send_response (server, ALLISWELL, rc=response_code_number(ALLISWELL))
+
+    except KeyError:
+        _send_response (server, FORBIDDEN)
+
 

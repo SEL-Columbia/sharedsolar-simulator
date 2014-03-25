@@ -37,6 +37,7 @@ class SharedSolarHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         u.add_url('/vendor/validate', sharedsolar_urls.vendor_validate)
         u.add_url('/vendor/accounts/list', sharedsolar_urls.vendor_accounts_list)
         u.add_url('/vendor/account/toggle', sharedsolar_urls.vendor_account_toggle)
+        u.add_url('//vendor/account/credit/add', sharedsolar_urls.vendor_account_credit_add)
 
         u.run(self, path.query, form)
 
