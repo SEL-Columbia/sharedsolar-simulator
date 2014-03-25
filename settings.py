@@ -9,6 +9,7 @@ file which is excluded from source control.
 
 DATA_FOLDER   = '/tmp'
 ACCOUNTS_LIST = 'accounts.txt'
+CIRCUITS_LIST = 'circuits.txt'
 
 try:
     from local_settings import *

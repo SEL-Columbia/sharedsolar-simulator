@@ -81,10 +81,13 @@ def vendor_accounts_list (server, form):
             with open(os.path.join(settings.DATA_FOLDER, settings.ACCOUNTS_LIST), 'r') as f:
                 account_id_list = f.read().splitlines()
 
+            with open(os.path.join(settings.DATA_FOLDER, settings.CIRCUITS_LIST), 'r') as f:
+                circuit_id_list = f.read().splitlines()
+
             data = []
             # produce some random results for each account
             for account_id in account_id_list:
-                data.append({ 'cid': '.'.join(['192', '168', '1', str(int(random() * 256))]),
+                data.append({ 'cid': circuit_id_list[ int(random() * len(circuit_id_list)) ],
                               'aid': account_id,
                               'cr': "%0.2f" % (random() * 1000),
                               'status': (random() > 0.49) })
