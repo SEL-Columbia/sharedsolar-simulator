@@ -35,6 +35,7 @@ class SharedSolarHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         # based on the value of the path.query
         # prefixed by APPURL (see the config.xml file)
         u.add_url('/vendor/validate', sharedsolar_urls.vendor_validate)
+        u.add_url('/vendor/accounts/list', sharedsolar_urls.vendor_accounts_list)
 
         u.run(self, path.query, form)
 
