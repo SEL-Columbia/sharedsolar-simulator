@@ -19,6 +19,17 @@ from random import random
 from url_dispatcher import TEXT_HTML, APP_JSON, ALLISWELL, FORBIDDEN, response_code_number
 import settings
 
+def _send_response (server, response, content_type=TEXT_HTML, rc=response_code_number(FORBIDDEN)):
+    """Logic to send an appropriate server reply, with the given
+    content type, response code, and response content,
+    defaulting to forbidden"""
+    
+    server.send_response(rc)
+    server.send_header("Content-type", content_type)
+    server.end_headers()
+    server.wfile.write(response)
+    
+
 # /vendor/validate
 def vendor_validate (server, form):
     """Handle the /vendor/validate request from the Android tablet app.
@@ -28,21 +39,16 @@ def vendor_validate (server, form):
     It will POST a single value, vendordevice_id, which corresponds to
     the tablet device's mac address."""
 
-    response = FORBIDDEN
     try:
         device_id = form.getvalue("vendordevice_id")
 
         # the actual server will check the device_id vs a permitted list
         # but for the purposes of the simulator, we'll allow all logins
-        response = ALLISWELL
+        _send_response (server, ALLISWELL, rc=response_code_number(ALLISWELL))
 
     except KeyError:
-        pass
-    
-    server.send_response(response_code_number(response))
-    server.send_header("Content-type", TEXT_HTML)
-    server.end_headers()
-    server.wfile.write(response)
+        _send_response (server, FORBIDDEN)
+
 
 # /vendor/accounts/list
 def vendor_accounts_list (server, form):
@@ -83,20 +89,39 @@ def vendor_accounts_list (server, form):
                               'cr': "%0.2f" % (random() * 1000),
                               'status': (random() > 0.49) })
 
-            server.send_response(response_code_number(ALLISWELL))
-            server.send_header("Content-type", APP_JSON)
-            server.end_headers()
-            server.wfile.write(json.dumps(data))
+            _send_response (server, json.dumps(data), content_type=APP_JSON, rc=response_code_number(ALLISWELL))
+            return
                       
         except IOError:
             pass
             
     except KeyError:
         pass
-    
-    server.send_response(response_code_number(response))
-    server.send_header("Content-type", TEXT_HTML)
-    server.end_headers()
-    server.wfile.write(response)
+
+    _send_response (server, FORBIDDEN)
+
+# /vendor/account/toggle
+def vendor_account_toggle (server, form):
+    """Handle the /vendor/account/toggle request from the Android tablet app.
+
+    This request occurs when clicking the status button from within the list
+    of accounts, to change an account's status to off from on, and vice-versa.
+
+    It will POST a single value, vendordevice_id, which corresponds to
+    the tablet device's mac address."""
+
+    try:
+        # this version of the simulator allows all logins and doesn't
+        # keep state, so the device_id value doesn't matter; it simply
+        # needs to be present in the POST request
+        device_id = form.getvalue("vendordevice_id")
+
+        # the actual server will update a database with the status switch
+        # but since the simulator currently just sets this randomly
+        # (see vendor_accounts_list, above) we'll just respond ok for now
+        _send_response (server, ALLISWELL, rc=response_code_number(ALLISWELL))
+
+    except KeyError:
+        _send_response (server, FORBIDDEN)
 
 

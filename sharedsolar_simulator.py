@@ -36,6 +36,7 @@ class SharedSolarHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         # prefixed by APPURL (see the config.xml file)
         u.add_url('/vendor/validate', sharedsolar_urls.vendor_validate)
         u.add_url('/vendor/accounts/list', sharedsolar_urls.vendor_accounts_list)
+        u.add_url('/vendor/account/toggle', sharedsolar_urls.vendor_account_toggle)
 
         u.run(self, path.query, form)
 
