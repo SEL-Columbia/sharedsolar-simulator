@@ -76,7 +76,7 @@ def vendor_accounts_list (server, form):
         # needs to be present in the POST request
         device_id = form.getvalue("vendordevice_id")
 
-        # get the account list from a file in the data folder
+        # get the account and circuit list from a file in the data folder
         try:
             with open(os.path.join(settings.DATA_FOLDER, settings.ACCOUNTS_LIST), 'r') as f:
                 account_id_list = f.read().splitlines()
@@ -151,4 +151,57 @@ def vendor_account_credit_add (server, form):
     except KeyError:
         _send_response (server, FORBIDDEN)
 
+# /admin/circuits/use 
+def admin_circuits_use (server, form):
+    """Handle the /admin/circuits/use request from the Android tablet app.
+
+    This request occurs when clicking the 'Charts' button.
+
+    It will POST a single value, vendordevice_id, which corresponds to
+    the tablet device's mac address.
+
+    The function is expected to return a list of json objects, each containing:
+
+    { "cid",   # Circuit ID
+      "wh_today", # Watt Hours Today
+      "pmax",     # Power Max parameter
+      "emax",     # Energy Max : "{0:.2f}".format(circuit.params["ENERGY_MAX"]),
+      "watts",    # Watts
+      "cr"        # amount of credit available
+    }
+
+    """
+
+    response = FORBIDDEN
+    try:
+        # this version of the simulator allows all logins and doesn't
+        # keep state, so the device_id value doesn't matter; it simply
+        # needs to be present in the POST request
+        device_id = form.getvalue("vendordevice_id")
+
+        # get the account and circuit list from a file in the data folder
+        try:
+            with open(os.path.join(settings.DATA_FOLDER, settings.ACCOUNTS_LIST), 'r') as f:
+                circuit_id_list = f.read().splitlines()
+
+            data = []
+            # produce some random results for each account
+            for circuit_id in circuit_id_list:
+                data.append({ 'cid': circuit_id,
+                              'wh_today': int(random() * 100),
+                              'pmax': 0.9,
+                              'emax': "%0.2f" % (random() * 1000),
+                              'watts': int(random() * 5000),
+                              'cr': "%0.2f" % (random() * 1000) })
+
+            _send_response (server, json.dumps(data), content_type=APP_JSON, rc=response_code_number(ALLISWELL))
+            return
+                      
+        except IOError:
+            pass
+            
+    except KeyError:
+        pass
+
+    _send_response (server, FORBIDDEN)
 
