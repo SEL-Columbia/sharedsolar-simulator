@@ -162,10 +162,11 @@ def admin_circuits_use (server, form):
 
     The function is expected to return a list of json objects, each containing:
 
-    { "cid",   # Circuit ID
+    { "cid",      # Circuit ID
+      "aid",      # Account ID
       "wh_today", # Watt Hours Today
       "pmax",     # Power Max parameter
-      "emax",     # Energy Max : "{0:.2f}".format(circuit.params["ENERGY_MAX"]),
+      "emax",     # Energy Max PARAMETER
       "watts",    # Watts
       "cr"        # amount of credit available
     }
@@ -182,16 +183,20 @@ def admin_circuits_use (server, form):
         # get the account and circuit list from a file in the data folder
         try:
             with open(os.path.join(settings.DATA_FOLDER, settings.ACCOUNTS_LIST), 'r') as f:
+                account_id_list = f.read().splitlines()
+
+            with open(os.path.join(settings.DATA_FOLDER, settings.CIRCUITS_LIST), 'r') as f:
                 circuit_id_list = f.read().splitlines()
 
             data = []
-            # produce some random results for each account
+            # produce some random results for each circuit
             for circuit_id in circuit_id_list:
                 data.append({ 'cid': circuit_id,
-                              'wh_today': int(random() * 100),
-                              'pmax': int(random() * 10),
+                              'aid': account_id_list[ int(random() * len(account_id_list)) ],
+                              'wh_today': "%0.2f" % (random() * 100),
+                              'pmax': "%0.2f" % (random() * 10),
                               'emax': "%0.2f" % (random() * 10),
-                              'watts': int(random() * 100),
+                              'watts': "%0.2f" % (random() * 100),
                               'cr': "%0.2f" % (random() * 500) })
 
             _send_response (server, json.dumps(data), content_type=APP_JSON, rc=response_code_number(ALLISWELL))
