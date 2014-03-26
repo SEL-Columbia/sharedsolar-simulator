@@ -46,11 +46,11 @@ class SharedSolarHandler (BaseHTTPServer.BaseHTTPRequestHandler):
     # nevertheless we need to respond to as an http server
     def do_GET (self):
         u = URLDispatcher()
-        u.run(self, None)
+        u.run(self, None, None)
 
     def do_HEAD (self):
         u = URLDispatcher()
-        u.run(self, None)
+        u.run(self, None, None)
 
 if __name__ == '__main__':
     try:

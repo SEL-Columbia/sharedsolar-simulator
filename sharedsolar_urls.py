@@ -189,10 +189,10 @@ def admin_circuits_use (server, form):
             for circuit_id in circuit_id_list:
                 data.append({ 'cid': circuit_id,
                               'wh_today': int(random() * 100),
-                              'pmax': 0.9,
-                              'emax': "%0.2f" % (random() * 1000),
-                              'watts': int(random() * 5000),
-                              'cr': "%0.2f" % (random() * 1000) })
+                              'pmax': int(random() * 10),
+                              'emax': "%0.2f" % (random() * 10),
+                              'watts': int(random() * 100),
+                              'cr': "%0.2f" % (random() * 500) })
 
             _send_response (server, json.dumps(data), content_type=APP_JSON, rc=response_code_number(ALLISWELL))
             return
@@ -205,3 +205,8 @@ def admin_circuits_use (server, form):
 
     _send_response (server, FORBIDDEN)
 
+
+# remaining app request urls:
+# /fieldtech/device/sync
+# /manage/update_tokens
+# /manage/make_tokens
