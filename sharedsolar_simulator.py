@@ -39,6 +39,7 @@ class SharedSolarHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         u.add_url('/vendor/account/toggle', sharedsolar_urls.vendor_account_toggle)
         u.add_url('/vendor/account/credit/add', sharedsolar_urls.vendor_account_credit_add)
         u.add_url('/admin/circuits/use', sharedsolar_urls.admin_circuits_use)
+        u.add_url('/fieldtech/device/sync', sharedsolar_urls.fieldtech_device_sync)
 
         u.run(self, path.query, form)
 
