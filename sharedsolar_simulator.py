@@ -23,12 +23,17 @@ class SharedSolarHandler (BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_POST (self):
         path = urlparse.urlparse(self.path)
+
+        env = {'REQUEST_METHOD':'POST'}
+        try:
+            env['CONTENT_TYPE'] = self.headers['Content-Type']
+        except KeyError:
+            pass
+
         form = cgi.FieldStorage(
             fp=self.rfile, 
             headers=self.headers,
-            environ={'REQUEST_METHOD':'POST',
-                     'CONTENT_TYPE':self.headers['Content-Type'],
-                     })
+            environ=env)
 
         u = URLDispatcher()
         # define which response function to use,

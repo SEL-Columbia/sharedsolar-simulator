@@ -92,7 +92,6 @@ def vendor_accounts_list (server, form):
                           'status': (random() > 0.49) })
 
         reply_fn = _send_response (server, json.dumps(data), content_type=APP_JSON, rc=response_code_number(ALLISWELL))
-        return
 
     except IOError:
         pass
